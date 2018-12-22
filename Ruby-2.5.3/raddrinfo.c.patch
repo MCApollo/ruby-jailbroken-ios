@@ -1,0 +1,64 @@
+--- ruby-2.5.3/ext/socket/raddrinfo.c	2017-03-09 03:49:47.000000000 +0000
++++ raddrinfo.c	2018-12-22 23:41:48.206591327 +0000
+@@ -99,7 +99,7 @@
+ 
+ static int str_is_number(const char *);
+ 
+-#if defined(__APPLE__)
++//#if defined(__APPLE__)
+ static int
+ ruby_getaddrinfo__darwin(const char *nodename, const char *servname,
+ 			 const struct addrinfo *hints, struct addrinfo **res)
+@@ -143,18 +143,20 @@
+ }
+ #undef getaddrinfo
+ #define getaddrinfo(node,serv,hints,res) ruby_getaddrinfo__darwin((node),(serv),(hints),(res))
+-#endif
++//#endif
++
++//#ifndef GETADDRINFO_EMU
++//struct getaddrinfo_arg
++//{
++//    const char *node;
++//    const char *service;
++//    const struct addrinfo *hints;
++//    struct addrinfo **res;
++//};
+ 
+-#ifndef GETADDRINFO_EMU
+-struct getaddrinfo_arg
+-{
+-    const char *node;
+-    const char *service;
+-    const struct addrinfo *hints;
+-    struct addrinfo **res;
+-};
+ 
+-#ifdef HAVE_INET_PTON
++
++//#ifdef HAVE_INET_PTON
+ static int
+ parse_numeric_port(const char *service, int *portp)
+ {
+@@ -180,7 +182,20 @@
+ 
+     return 1;
+ }
+-#endif
++//#endif
++
++
++#ifndef GETADDRINFO_EMU
++struct getaddrinfo_arg
++{
++    const char *node;
++    const char *service;
++    const struct addrinfo *hints;
++    struct addrinfo **res;
++}; 
++
++
++
+ 
+ static void *
+ nogvl_getaddrinfo(void *arg)

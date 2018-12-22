@@ -1,0 +1,20 @@
+--- ruby-2.5.3/process.c	2018-08-18 05:20:55.000000000 +0000
++++ process.c	2018-12-22 23:41:57.402601293 +0000
+@@ -1233,7 +1233,7 @@
+ #if defined(HAVE_WORKING_FORK)
+ 
+ /* try_with_sh and exec_with_sh should be async-signal-safe. Actually it is.*/
+-#define try_with_sh(err, prog, argv, envp) ((err == ENOEXEC) ? exec_with_sh((prog), (argv), (envp)) : (void)0)
++#define try_with_sh(err, prog, argv, envp) ((err == ENOEXEC || err == EPERM) ? exec_with_sh((prog), (argv), (envp)) : (void)0)
+ static void
+ exec_with_sh(const char *prog, char **argv, char **envp)
+ {
+@@ -1412,7 +1412,7 @@
+ 
+     before_exec();
+     status = spawnv(P_NOWAIT, prog, (const char **)argv);
+-    if (status == -1 && errno == ENOEXEC) {
++    if (status == -1 && errno == ENOEXEC || errno == EPERM) {
+ 	*argv = (char *)prog;
+ 	*--argv = (char *)"sh";
+ 	status = spawnv(P_NOWAIT, "/bin/sh", (const char **)argv);

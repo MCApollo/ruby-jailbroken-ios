@@ -1,0 +1,14 @@
+--- ruby-2.5.3/ext/dbm/dbm.c	2017-10-22 07:18:55.000000000 +0000
++++ dbm.c	2018-12-22 23:41:24.210565335 +0000
+@@ -1111,9 +1111,9 @@
+ #if defined(_DBM_IOERR)
+         version = rb_str_new2("ndbm (4.3BSD)");
+ #elif defined(RUBYDBM_GDBM_HEADER)
+-#  if defined(HAVE_DECLARED_LIBVAR_GDBM_VERSION)
++#  if 1 //defined(HAVE_DECLARED_LIBVAR_GDBM_VERSION)
+         /* since gdbm 1.9 */
+-        version = rb_str_new2(gdbm_version);
++        version = rb_str_new2("XXX");
+ #  elif defined(HAVE_UNDECLARED_LIBVAR_GDBM_VERSION)
+         /* ndbm.h doesn't declare gdbm_version until gdbm 1.8.3.
+          * See extconf.rb for more information. */
